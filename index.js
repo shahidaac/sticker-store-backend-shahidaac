@@ -13,12 +13,7 @@ const client = new MongoClient(uri, {
 });
 
 const app = express();
-app.use(
-  cors({
-    origin: "http://localhost:3000", // restrict calls to those this address
-    methods: "GET", // only allow GET requests
-  })
-);
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const port = process.env.PORT || 5000;
