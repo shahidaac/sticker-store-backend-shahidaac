@@ -18,11 +18,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const port = process.env.PORT || 5000;
 
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+
+
+
+
 client.connect((err) => {
   const stickerCollection = client.db("stickerStore").collection("stickers");
   const orderCollection = client.db("stickerStore").collection("orders");
 
-  app.post("/addSticker", cors(),(req, res) => {
+
+  
+
+  app.post("/addSticker", (req, res) => {
     const sticker = req.body;
     stickerCollection.insertOne(sticker).then((result) => {
       console.log(result);
@@ -30,14 +42,14 @@ client.connect((err) => {
     });
   });
 
-  app.post("/addOrder", cors(), (req, res) => {
+  app.post("/addOrder",  (req, res) => {
     const order = req.body;
     orderCollection.insertOne(order).then((result) => {
       res.send(result.insertedCount > 0);
     });
   });
 
-  app.get("/orders", cors(), (req, res) => {
+  app.get("/orders",  (req, res) => {
     orderCollection
       .find({ email: req.query.email })
       .toArray((err, documents) => {
@@ -45,13 +57,13 @@ client.connect((err) => {
       });
   });
 
-  app.get("/stickers", cors(), (req, res) => {
+  app.get("/stickers",  (req, res) => {
     stickerCollection.find({}).toArray((err, documents) => {
       res.send(documents);
     });
   });
 
-  app.get("/checkout/:id", cors(), (req, res) => {
+  app.get("/checkout/:id",  (req, res) => {
     stickerCollection
       .find({ _id: objectId(req.params.id) })
       .toArray((err, documents) => {
@@ -59,7 +71,7 @@ client.connect((err) => {
       });
   });
 
-  app.get("/manageProduct", cors(), (req, res) => {
+  app.get("/manageProduct",  (req, res) => {
     stickerCollection
       .find({ email: req.query.email })
       .toArray((err, documents) => {
@@ -67,7 +79,7 @@ client.connect((err) => {
       });
   });
 
-  app.delete("/delete/:id", cors(), (req, res) => {
+  app.delete("/delete/:id",  (req, res) => {
     stickerCollection
       .findOneAndDelete({ _id: objectId(req.params.id) })
       .then((result) => {
@@ -76,7 +88,7 @@ client.connect((err) => {
   });
 });
 
-app.get("/", cors(), (req, res) => {
+app.get("/",  (req, res) => {
   res.send("Hi Trendy Stickers");
 });
 
