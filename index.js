@@ -83,7 +83,7 @@ client.connect((err) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello Trendy Stickers");
+  res.send("Hi Trendy Stickers");
 });
 
 app.listen(port);
