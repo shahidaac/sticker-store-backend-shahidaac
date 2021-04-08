@@ -22,7 +22,7 @@ client.connect((err) => {
   const stickerCollection = client.db("stickerStore").collection("stickers");
   const orderCollection = client.db("stickerStore").collection("orders");
 
-  app.post("/addSticker", (req, res) => {
+  app.post("/addSticker", cors(),(req, res) => {
     const sticker = req.body;
     stickerCollection.insertOne(sticker).then((result) => {
       console.log(result);
@@ -30,14 +30,14 @@ client.connect((err) => {
     });
   });
 
-  app.post("/addOrder", (req, res) => {
+  app.post("/addOrder", cors(), (req, res) => {
     const order = req.body;
     orderCollection.insertOne(order).then((result) => {
       res.send(result.insertedCount > 0);
     });
   });
 
-  app.get("/orders", (req, res) => {
+  app.get("/orders", cors(), (req, res) => {
     orderCollection
       .find({ email: req.query.email })
       .toArray((err, documents) => {
@@ -45,13 +45,13 @@ client.connect((err) => {
       });
   });
 
-  app.get("/stickers", (req, res) => {
+  app.get("/stickers", cors(), (req, res) => {
     stickerCollection.find({}).toArray((err, documents) => {
       res.send(documents);
     });
   });
 
-  app.get("/checkout/:id", (req, res) => {
+  app.get("/checkout/:id", cors(), (req, res) => {
     stickerCollection
       .find({ _id: objectId(req.params.id) })
       .toArray((err, documents) => {
@@ -59,7 +59,7 @@ client.connect((err) => {
       });
   });
 
-  app.get("/manageProduct", (req, res) => {
+  app.get("/manageProduct", cors(), (req, res) => {
     stickerCollection
       .find({ email: req.query.email })
       .toArray((err, documents) => {
@@ -67,7 +67,7 @@ client.connect((err) => {
       });
   });
 
-  app.delete("/delete/:id", (req, res) => {
+  app.delete("/delete/:id", cors(), (req, res) => {
     stickerCollection
       .findOneAndDelete({ _id: objectId(req.params.id) })
       .then((result) => {
@@ -76,7 +76,7 @@ client.connect((err) => {
   });
 });
 
-app.get("/", (req, res) => {
+app.get("/", cors(), (req, res) => {
   res.send("Hi Trendy Stickers");
 });
 
